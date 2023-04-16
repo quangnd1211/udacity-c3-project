@@ -6,15 +6,6 @@ version: 2.1
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
   build-and-push: # job name
-    environment:
-      DOCKER_IMAGE_API_FEED: quangnd20/udagram-api-feed
-      DOCKER_IMAGE_API_USER: quangnd20/udagram-api-user
-      DOCKER_IMAGE_FRONTEND: quangnd20/udagram-frontend
-      DOCKER_IMAGE_REVERSEPROXY: quangnd20/reverseproxy
-      DOCKER_IMAGE_VERSION_API_FEED: quangnd20/udagram-api-feed:1.0.0
-      DOCKER_IMAGE_VERSION_API_USER: quangnd20/udagram-api-user:1.0.0
-      DOCKER_IMAGE_VERSION_FRONTEND: quangnd20/udagram-frontend:1.0.0
-      DOCKER_IMAGE_VERSION_REVERSEPROXY: quangnd20/reverseproxy:1.0.0
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
@@ -31,27 +22,27 @@ jobs:
         command: |
           echo "Inside the Build Docker image step"
           docker --version # print the version for logging
-          docker build -t $DOCKER_IMAGE_API_FEED .
-          docker build -t $DOCKER_IMAGE_API_USER .
-          docker build -t $DOCKER_IMAGE_FRONTEND .
-          docker build -t $DOCKER_IMAGE_REVERSEPROXY .
+          docker build -t udagram-api-feed ./udagram-api-feed
+          docker build -t udagram-api-user ./udagram-api-user
+          docker build -t udagram-frontend ./udagram-frontend
+          docker build -t reverseproxy ./udagram-reverseproxy
       - run:
         name: Tagging Docker images
         command: |
           echo "Inside the tagging Docker image step"
-          docker tag $DOCKER_IMAGE_API_FEED $DOCKER_IMAGE_VERSION_API_FEED
-          docker tag $DOCKER_IMAGE_API_USER $DOCKER_IMAGE_VERSION_API_USER
-          docker tag $DOCKER_IMAGE_FRONTEND $DOCKER_IMAGE_VERSION_FRONTEND
-          docker tag $DOCKER_IMAGE_REVERSEPROXY $DOCKER_IMAGE_VERSION_REVERSEPROXY
+          docker tag udagram-api-feed quangnd20/udagram-api-feed:1.0.0
+          docker tag udagram-api-user quangnd20/udagram-api-user:1.0.0
+          docker tag udagram-frontend quangnd20/udagram-frontend:1.0.0
+          docker tag reverseproxy quangnd20/reverseproxy:1.0.0
       - run:
         name: Push Docker images
         command: |
           echo "Inside the push Docker image step"
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          docker push $DOCKER_IMAGE_VERSION_API_FEED
-          docker push $DOCKER_IMAGE_VERSION_API_USER
-          docker push $DOCKER_IMAGE_VERSION_FRONTEND
-          docker push $DOCKER_IMAGE_VERSION_REVERSEPROXY
+          docker push quangnd20/udagram-api-feed:1.0.0
+          docker push quangnd20/udagram-api-user:1.0.0
+          docker push quangnd20/udagram-frontend:1.0.0
+          docker push quangnd20/reverseproxy:1.0.0
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
